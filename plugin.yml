@@ -1,0 +1,17 @@
+name: TTT
+main: me.zabzabdoda.TTT.TTT
+version: 1.0
+api-version: 1.14
+author: zabzabdoda
+description: Loot Locations plugin
+commands:
+  ttt:
+    description: Main command for BananaUHC.
+    usage: |
+           /ttt <give|list|help>
+           Example: /ttt wand - Give you the wand to generate loot.
+  chat:
+    description: switches chat rooms.
+    usage: |
+           /chat <global|traitor>
+           Example: /chat traitor - switches to traitor chat.
