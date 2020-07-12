@@ -41,16 +41,12 @@ public class TTT extends JavaPlugin implements Listener {
 	public static Server server;
 	private World currentWorld;
 	private Inventory deadInv;
-	private String gameStatus = "Preparing";
+	private String gameStatus = "Preparing...";
 	private int timeSeconds;
 	private ArrayList<Player> traitorChatRoom;
 
 	static {
 		server = Bukkit.getServer();
-	}
-
-	public TTT() {
-		
 	}
 
 	public void onEnable() {
