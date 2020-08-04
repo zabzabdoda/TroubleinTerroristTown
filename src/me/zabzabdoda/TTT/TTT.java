@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
@@ -115,7 +116,8 @@ public class TTT extends JavaPlugin implements Listener {
 		if(e.getRightClicked() instanceof ArmorStand) {
 			e.setCancelled(true);
 			ArmorStand as = (ArmorStand) e.getRightClicked();
-			if(as.getHelmet().getType().equals(Material.PLAYER_HEAD)) {
+			EntityEquipment ee = (EntityEquipment) as;
+			if(ee.getHelmet().getType().equals(Material.PLAYER_HEAD)) {
 				System.out.println(as.getName());
 				//Open bomb menu
 				Inventory inventory = DeadInventorySetup(e.getPlayer(),as.getName());
@@ -180,8 +182,8 @@ public class TTT extends JavaPlugin implements Listener {
 		}else if(sender instanceof Player && cmd.getName().equalsIgnoreCase("chat")) {
 			if(args.length == 1) {
 				Player player = (Player) sender;
-				if(player.getScoreboard().getPlayerTeam(player) != null) {
-					if(args[0].equalsIgnoreCase("traitor") && player.getScoreboard().getPlayerTeam(player).getName().equalsIgnoreCase("Traitor")) {
+				if(player.getScoreboard().getEntryTeam(player.getDisplayName()) != null) {
+					if(args[0].equalsIgnoreCase("traitor") && player.getScoreboard().getEntryTeam(player.getDisplayName()).getName().equalsIgnoreCase("Traitor")) {
 						traitorChatRoom.add((Player) sender);
 						sender.sendMessage("You are now in " + ChatColor.RED + "[Traitor]" + ChatColor.WHITE + " chat.");
 						return true;
@@ -207,7 +209,7 @@ public class TTT extends JavaPlugin implements Listener {
 		if(traitorChatRoom.contains(e.getPlayer())) {
 			e.setCancelled(true);
 			for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-				if(p.getScoreboard().getPlayerTeam(p) != null && e.getPlayer().getScoreboard().getPlayerTeam(p).getName().equalsIgnoreCase("Traitor")) {
+				if(p.getScoreboard().getEntryTeam(p.getDisplayName()) != null && e.getPlayer().getScoreboard().getEntryTeam(p.getDisplayName()).getName().equalsIgnoreCase("Traitor")) {
 					p.sendMessage(ChatColor.RED + "[Traitor Chat]" + ChatColor.WHITE + " <" + e.getPlayer().getDisplayName() + "> " + e.getMessage());
 				}
 			}
@@ -232,9 +234,10 @@ public class TTT extends JavaPlugin implements Listener {
 		ArmorStand as = player.getWorld().spawn(loc, ArmorStand.class);
     	ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
     	SkullMeta sm = (SkullMeta) skull.getItemMeta();
-    	sm.setOwner(player.getName());
+    	EntityEquipment ee = (EntityEquipment) as;
+    	sm.setOwningPlayer(player);
     	skull.setItemMeta(sm);
-		as.setHelmet(skull);
+    	ee.setHelmet(skull);
 		as.setAI(false);
 		as.setInvulnerable(true);
 		as.setGravity(false);
@@ -245,7 +248,7 @@ public class TTT extends JavaPlugin implements Listener {
 		}else {
 			weaponName = "Unknown";
 		}
-		Team team = player.getScoreboard().getPlayerTeam(player);
+		Team team = player.getScoreboard().getEntryTeam(player.getDisplayName());
 		String playername = player.getName();
 		if(team.getName().equals("Innocent")) {
 			playername = ChatColor.GREEN + player.getName();
@@ -276,12 +279,10 @@ public class TTT extends JavaPlugin implements Listener {
         }.runTaskTimer(this, 0, 20);
 	}
 	
-	
-	@SuppressWarnings("deprecation")
 	public Team getTeam(Player player) {
 		Team team = null;
 		for (Team t : player.getScoreboard().getTeams()) {
-			if (t.getPlayers().contains(player)) {
+			if (t.getEntries().contains(player.getDisplayName())) {
 				team = t;
 			}
 		}
@@ -328,7 +329,7 @@ public class TTT extends JavaPlugin implements Listener {
 	}
 
 	public void helpMenu(CommandSender sender) {
-		sender.sendMessage(ChatColor.YELLOW + "Help Menu for LootGenerator plugin");
+		sender.sendMessage(ChatColor.YELLOW + "Help Menu for TTT plugin");
 		sender.sendMessage(ChatColor.YELLOW + "------------------------------");
 		sender.sendMessage(ChatColor.YELLOW + "Commands:");
 		sender.sendMessage(ChatColor.YELLOW + "/ttt help " + ChatColor.GRAY + "-" + ChatColor.WHITE + " Shows you this menu.");

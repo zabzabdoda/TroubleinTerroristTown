@@ -1,15 +1,15 @@
 name: TTT
 main: me.zabzabdoda.TTT.TTT
 version: 1.0
-api-version: 1.14
+api-version: 1.16
 author: zabzabdoda
-description: Loot Locations plugin
+description: Trouble in Terrorist Town plugin
 commands:
   ttt:
-    description: Main command for BananaUHC.
+    description: Main command for Trouble in Terrorist Town.
     usage: |
-           /ttt <give|list|help>
-           Example: /ttt wand - Give you the wand to generate loot.
+           /ttt <start|join>
+           Example: /ttt start - Starts the TTT game
   chat:
     description: switches chat rooms.
     usage: |
